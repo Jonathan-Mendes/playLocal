@@ -16,6 +16,7 @@
 
 ```bash
 git clone https://github.com/seu-usuario/playlocal
+
 cd playlocal
 
 docker-compose up --build
