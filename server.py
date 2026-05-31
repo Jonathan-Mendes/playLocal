@@ -13,7 +13,7 @@ LIMITE_BYTES = 5 * 1024 ** 3  # 5 GB
 # ── FRONT ─────────────────────────────────────────────────
 @app.route("/")
 def index():
-    return send_from_directory(".", "mytube.html")
+    return send_from_directory(".", "playlocal.html")
 
 @app.route("/videos.json")
 def videos_json():
@@ -117,5 +117,5 @@ def storage():
 
 if __name__ == "__main__":
     os.makedirs(PASTA_VIDEOS, exist_ok=True)
-    print("MyTube em http://localhost:8080")
+    print("PlayLocal em http://localhost:8080")
     app.run(host="0.0.0.0", port=8080, debug=False)

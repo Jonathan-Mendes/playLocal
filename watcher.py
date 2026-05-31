@@ -2,7 +2,7 @@ import json
 import os
 import time
 import shutil
-from pytubefix import YouTube
+import yt_dlp
 
 PASTA_VIDEOS = "videos"
 LINKS_JSON   = "links.json"
@@ -80,17 +80,35 @@ def monitorar():
                     continue
 
                 try:
-                    yt  = YouTube(url)
-                    print(f"[DOWNLOAD] {yt.title} ({gb(uso_disco())} GB usados)")
-                    ys  = yt.streams.get_highest_resolution()
-                    fp  = ys.download(output_path=PASTA_VIDEOS)
+                    info_opts = {"quiet": True, "no_warnings": True, "skip_download": True}
+                    with yt_dlp.YoutubeDL(info_opts) as ydl:
+                        info = ydl.extract_info(url, download=False)
+                    titulo = info.get("title", "video")
+                    thumb  = info.get("thumbnail", "")
+                    print(f"[DOWNLOAD] {titulo} ({gb(uso_disco())} GB usados)")
+
+                    dl_opts = {
+                        "quiet":      True,
+                        "no_warnings": True,
+                        "format":     "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                        "outtmpl":    os.path.join(PASTA_VIDEOS, "%(title)s.%(ext)s"),
+                        "merge_output_format": "mp4",
+                    }
+                    with yt_dlp.YoutubeDL(dl_opts) as ydl:
+                        ydl.download([url])
+
+                    # Descobre o arquivo gerado
+                    arquivo = max(
+                        [f for f in os.listdir(PASTA_VIDEOS) if f.endswith(".mp4")],
+                        key=lambda f: os.path.getmtime(os.path.join(PASTA_VIDEOS, f))
+                    )
                     atualizar_banco({
-                        "titulo":  yt.title,
-                        "arquivo": os.path.basename(fp),
-                        "thumb":   yt.thumbnail_url,
+                        "titulo":  titulo,
+                        "arquivo": arquivo,
+                        "thumb":   thumb,
                     })
                     baixados.add(url)
-                    print(f"[OK] {yt.title}")
+                    print(f"[OK] {titulo}")
                 except Exception as e:
                     print(f"[ERRO] {url}: {e}")
                     links_restantes.append(url)

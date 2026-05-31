@@ -5,7 +5,7 @@
 'use strict';
 
 /* ── STATE ── */
-var videos = [];
+var videos   = [];
 var idxAtivo = -1;
 var toastTimer;
 
@@ -15,13 +15,13 @@ var toastTimer;
 ───────────────────────────────────────── */
 function mkSkeleton() {
     return '<div class="card">'
-        + '<div class="thumb-wrap sk sk-thumb"></div>'
-        + '<div class="card-info">'
-        + '<div class="sk sk-line"></div>'
-        + '<div class="sk sk-line w6"></div>'
-        + '<div class="sk sk-line w4"></div>'
-        + '</div>'
-        + '</div>';
+         +   '<div class="thumb-wrap sk sk-thumb"></div>'
+         +   '<div class="card-info">'
+         +     '<div class="sk sk-line"></div>'
+         +     '<div class="sk sk-line w6"></div>'
+         +     '<div class="sk sk-line w4"></div>'
+         +   '</div>'
+         + '</div>';
 }
 
 
@@ -29,29 +29,29 @@ function mkSkeleton() {
    BUILD — VIDEO CARD (grade principal)
 ───────────────────────────────────────── */
 function mkCard(v, i) {
-    var nome = v.titulo || v.arquivo || 'Vídeo ' + (i + 1);
+    var nome    = v.titulo || v.arquivo || 'Vídeo ' + (i + 1);
     var arquivo = v.arquivo || '';
 
     var el = document.createElement('div');
     el.className = 'card';
     el.innerHTML =
         '<div class="thumb-wrap">'
-        + '<img src="' + (v.thumb || '') + '" alt="" onerror="this.style.display=\'none\'">'
-        + '<div class="play-ov"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'
-        + (v.duracao ? '<span class="dur">' + v.duracao + '</span>' : '')
-        + '<button class="del-btn" title="Excluir vídeo">'
-        + '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>'
-        + '</button>'
-        + '</div>'
-        + '<div class="card-info">'
-        + '<div class="card-title">' + nome + '</div>'
-        + '</div>';
+      +   '<img src="' + (v.thumb || '') + '" alt="" onerror="this.style.display=\'none\'">'
+      +   '<div class="play-ov"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>'
+      +   (v.duracao ? '<span class="dur">' + v.duracao + '</span>' : '')
+      +   '<button class="del-btn" title="Excluir vídeo">'
+      +     '<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>'
+      +   '</button>'
+      + '</div>'
+      + '<div class="card-info">'
+      +   '<div class="card-title">' + nome + '</div>'
+      + '</div>';
 
-    el.querySelector('.del-btn').addEventListener('click', function (e) {
+    el.querySelector('.del-btn').addEventListener('click', function(e) {
         e.stopPropagation();
         excluir(arquivo);
     });
-    el.addEventListener('click', function () { abrir(v, i); });
+    el.addEventListener('click', function() { abrir(v, i); });
 
     return el;
 }
@@ -61,7 +61,7 @@ function mkCard(v, i) {
    BUILD — SIDEBAR ITEM (player lateral)
 ───────────────────────────────────────── */
 function mkItem(v, i) {
-    var nome = v.titulo || v.arquivo || 'Vídeo ' + (i + 1);
+    var nome  = v.titulo || v.arquivo || 'Vídeo ' + (i + 1);
     var ativo = (i === idxAtivo);
 
     var el = document.createElement('div');
@@ -69,16 +69,16 @@ function mkItem(v, i) {
     el.id = 'li' + i;
     el.innerHTML =
         '<div class="li-thumb">'
-        + '<img src="' + (v.thumb || '') + '" alt="" onerror="this.style.display=\'none\'">'
-        + (v.duracao ? '<span class="li-dur">' + v.duracao + '</span>' : '')
-        + '</div>'
-        + '<div class="li-info">'
-        + '<div class="li-title">' + nome + '</div>'
-        + (ativo ? '<div class="li-now">▶ Reproduzindo</div>' : '')
-        + '</div>';
+      +   '<img src="' + (v.thumb || '') + '" alt="" onerror="this.style.display=\'none\'">'
+      +   (v.duracao ? '<span class="li-dur">' + v.duracao + '</span>' : '')
+      + '</div>'
+      + '<div class="li-info">'
+      +   '<div class="li-title">' + nome + '</div>'
+      +   (ativo ? '<div class="li-now">▶ Reproduzindo</div>' : '')
+      + '</div>';
 
     if (!ativo) {
-        el.addEventListener('click', function () { abrir(v, i); });
+        el.addEventListener('click', function() { abrir(v, i); });
     }
     return el;
 }
@@ -94,12 +94,12 @@ function renderGrid() {
     if (!videos.length) {
         grid.innerHTML =
             '<div class="empty">'
-            + '<svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>'
-            + '<p>Nenhum vídeo. Use a busca para baixar.</p>'
-            + '</div>';
+          +   '<svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>'
+          +   '<p>Nenhum vídeo. Use a busca para baixar.</p>'
+          + '</div>';
     } else {
         var frag = document.createDocumentFragment();
-        videos.forEach(function (v, i) { frag.appendChild(mkCard(v, i)); });
+        videos.forEach(function(v, i) { frag.appendChild(mkCard(v, i)); });
         grid.appendChild(frag);
     }
 
@@ -111,7 +111,7 @@ function renderSidebar() {
     var sc = document.getElementById('pl-scroll');
     sc.innerHTML = '';
     var frag = document.createDocumentFragment();
-    videos.forEach(function (v, i) { frag.appendChild(mkItem(v, i)); });
+    videos.forEach(function(v, i) { frag.appendChild(mkItem(v, i)); });
     sc.appendChild(frag);
 
     var active = document.getElementById('li' + idxAtivo);
@@ -135,13 +135,13 @@ async function carregar() {
 
 async function atualizarStorage() {
     try {
-        var r = await fetch('/api/storage');
+        var r    = await fetch('/api/storage');
         var data = await r.json();
-        var pct = Math.min(data.pct, 100);
+        var pct  = Math.min(data.pct, 100);
 
         var fill = document.getElementById('storage-fill');
         fill.style.width = pct + '%';
-        fill.className = 'storage-fill' + (pct >= 95 ? ' full' : pct >= 75 ? ' warn' : '');
+        fill.className   = 'storage-fill' + (pct >= 95 ? ' full' : pct >= 75 ? ' warn' : '');
         document.getElementById('storage-label').textContent = data.gb + ' / 5 GB';
     } catch (e) { /* servidor offline */ }
 }
@@ -181,7 +181,7 @@ async function buscarYT() {
     document.getElementById('search-modal').classList.add('open');
 
     try {
-        var r = await fetch('/api/search?q=' + encodeURIComponent(q) + '&limit=20');
+        var r     = await fetch('/api/search?q=' + encodeURIComponent(q) + '&limit=20');
         var itens = await r.json();
         document.getElementById('search-loading').classList.remove('show');
 
@@ -192,32 +192,32 @@ async function buscarYT() {
         }
 
         var frag = document.createDocumentFragment();
-        itens.forEach(function (v) {
-            var item = document.createElement('div');
+        itens.forEach(function(v) {
+            var item  = document.createElement('div');
             item.className = 'result-item';
 
             var btn = document.createElement('button');
             btn.className = 'dl-btn';
             btn.innerHTML =
                 '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>'
-                + 'Baixar';
+              + 'Baixar';
 
             item.innerHTML =
                 '<div class="result-thumb">'
-                + '<img src="' + (v.thumb || '') + '" alt="" onerror="this.style.display=\'none\'">'
-                + (v.duracao ? '<span class="result-dur">' + v.duracao + '</span>' : '')
-                + '</div>'
-                + '<div class="result-info"><div class="result-title">' + v.titulo + '</div></div>';
+              +   '<img src="' + (v.thumb || '') + '" alt="" onerror="this.style.display=\'none\'">'
+              +   (v.duracao ? '<span class="result-dur">' + v.duracao + '</span>' : '')
+              + '</div>'
+              + '<div class="result-info"><div class="result-title">' + v.titulo + '</div></div>';
             item.appendChild(btn);
 
-            btn.addEventListener('click', async function () {
-                btn.disabled = true;
+            btn.addEventListener('click', async function() {
+                btn.disabled  = true;
                 btn.innerHTML = '⏳ Na fila...';
                 try {
-                    var res = await fetch('/api/queue', {
-                        method: 'POST',
+                    var res  = await fetch('/api/queue', {
+                        method:  'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ url: v.url })
+                        body:    JSON.stringify({ url: v.url })
                     });
                     var data = await res.json();
                     if (data.erro) {
@@ -227,7 +227,7 @@ async function buscarYT() {
                         toast('📥 "' + v.titulo.slice(0, 40) + '..." adicionado à fila');
                     }
                 } catch (err) {
-                    btn.disabled = false;
+                    btn.disabled  = false;
                     btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Baixar';
                 }
             });
@@ -254,7 +254,7 @@ function fecharBusca() {
 function abrir(v, i) {
     idxAtivo = i;
     document.getElementById('p-title').textContent = v.titulo || v.arquivo || 'Vídeo';
-    document.getElementById('p-sub').textContent = v.duracao ? 'Duração: ' + v.duracao : '';
+    document.getElementById('p-sub').textContent   = v.duracao ? 'Duração: ' + v.duracao : '';
 
     var player = document.getElementById('player');
     player.src = '/videos/' + v.arquivo;
@@ -285,22 +285,22 @@ function toast(msg) {
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 3000);
+    toastTimer = setTimeout(function() { el.classList.remove('show'); }, 3000);
 }
 
 
 /* ─────────────────────────────────────────
    EVENTOS GLOBAIS
 ───────────────────────────────────────── */
-document.getElementById('busca').addEventListener('keydown', function (e) {
+document.getElementById('busca').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') buscarYT();
 });
 
-document.addEventListener('keydown', function (e) {
+document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') { fecharBusca(); fechar(); }
 });
 
-document.getElementById('search-modal').addEventListener('click', function (e) {
+document.getElementById('search-modal').addEventListener('click', function(e) {
     if (e.target === this) fecharBusca();
 });
 
