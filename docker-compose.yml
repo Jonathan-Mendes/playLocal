@@ -1,12 +1,22 @@
-version: "3.9"
-
 services:
-  app:
+  web:
     build: .
+    command: python server.py
     ports:
       - "8080:8080"
     volumes:
       - ./videos:/app/videos
       - ./videos.json:/app/videos.json
       - ./links.json:/app/links.json
+      - ./queue_status.json:/app/queue_status.json
+    restart: unless-stopped
+
+  watcher:
+    build: .
+    command: python watcher.py
+    volumes:
+      - ./videos:/app/videos
+      - ./videos.json:/app/videos.json
+      - ./links.json:/app/links.json
+      - ./queue_status.json:/app/queue_status.json
     restart: unless-stopped

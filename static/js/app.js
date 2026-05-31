@@ -1,5 +1,5 @@
 /* =========================================
-   MYTUBE — app.js
+   PlayLocal — app.js
    ========================================= */
 
 'use strict';
@@ -310,3 +310,48 @@ document.getElementById('search-modal').addEventListener('click', function(e) {
 ───────────────────────────────────────── */
 document.getElementById('grid').innerHTML = Array(8).fill(mkSkeleton()).join('');
 carregar();
+iniciarPollStatus();
+
+
+/* ─────────────────────────────────────────
+   DOWNLOAD PANEL
+───────────────────────────────────────── */
+var dlPollTimer = null;
+
+function iniciarPollStatus() {
+    if (dlPollTimer) return;
+    dlPollTimer = setInterval(atualizarDownloadPanel, 2000);
+    atualizarDownloadPanel(); // imediato
+}
+
+async function atualizarDownloadPanel() {
+    try {
+        var r    = await fetch('/api/queue_status');
+        var data = await r.json();
+        var panel = document.getElementById('dl-panel');
+
+        if (!data.ativo) {
+            panel.classList.remove('show');
+            // Se terminou um download, atualiza a grade
+            if (panel.dataset.wasActive === 'true') {
+                panel.dataset.wasActive = 'false';
+                carregar();
+            }
+            return;
+        }
+
+        panel.dataset.wasActive = 'true';
+        panel.classList.add('show');
+
+        document.getElementById('dl-pct-text').textContent = (data.pct || 0) + '%';
+        document.getElementById('dl-eta').textContent      = data.eta || '–';
+        document.getElementById('dl-speed').textContent    = data.velocidade || '–';
+        document.getElementById('dl-fill').style.width     = (data.pct || 0) + '%';
+        document.getElementById('dl-title').textContent    = data.titulo || '';
+        document.getElementById('dl-fila').textContent     = data.fila > 0 ? data.fila + ' na fila' : '';
+
+        var img = document.getElementById('dl-thumb-img');
+        if (data.thumb && img.src !== data.thumb) img.src = data.thumb;
+
+    } catch (e) { /* servidor offline */ }
+}

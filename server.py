@@ -86,6 +86,16 @@ def queue():
 
     return jsonify({"ok": True})
 
+
+# ── STATUS DA FILA ─────────────────────────────────────────
+@app.route("/api/queue_status")
+def queue_status():
+    STATUS_JSON = "queue_status.json"
+    if not os.path.exists(STATUS_JSON):
+        return jsonify({"ativo": False})
+    with open(STATUS_JSON, "r", encoding="utf-8") as f:
+        return jsonify(json.load(f))
+
 # ── DELETE ─────────────────────────────────────────────────
 @app.route("/api/delete/<path:filename>", methods=["DELETE"])
 def delete_video(filename):

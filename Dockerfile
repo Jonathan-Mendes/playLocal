@@ -8,6 +8,4 @@ RUN pip install flask yt-dlp
 COPY server.py watcher.py playlocal.html ./
 COPY static/ ./static/
 
-EXPOSE 8080
-
-CMD ["sh", "-c", "python watcher.py & python server.py"]
+RUN mkdir -p videos

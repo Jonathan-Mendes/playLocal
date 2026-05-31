@@ -70,6 +70,31 @@
 </div>
 
 
+
+<!-- ── DOWNLOAD PANEL ── -->
+<div class="dl-panel" id="dl-panel" data-was-active="false">
+    <div class="dl-panel-header">
+        <div class="spinner-small"></div>
+        <span class="dl-panel-title">Baixando vídeo...</span>
+        <span class="dl-panel-fila" id="dl-fila"></span>
+    </div>
+    <div class="dl-panel-body">
+        <div class="dl-thumb-row">
+            <div class="dl-thumb">
+                <img id="dl-thumb-img" src="" alt="" onerror="this.style.display='none'">
+            </div>
+            <div class="dl-video-title" id="dl-title"></div>
+        </div>
+        <div class="dl-progress-track">
+            <div class="dl-progress-fill" id="dl-fill" style="width:0%"></div>
+        </div>
+        <div class="dl-meta">
+            <span id="dl-speed">–</span>
+            <span><span id="dl-pct-text">0%</span> · ETA <span id="dl-eta">–</span></span>
+        </div>
+    </div>
+</div>
+
 <!-- ── TOAST ── -->
 <div class="queue-toast" id="toast"></div>
 
