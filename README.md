@@ -76,4 +76,4 @@ python scanner.py
 
 ---
 
-Feito com Python, Flask, [yt-dlp](https://github.com/yt-dlp/yt-dlp) e ffmpeg 🎬
+Feito com Python, Flask, [yt-dlp](https://github.com/yt-dlp/yt-dlp) e ffmpeg
