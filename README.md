@@ -18,13 +18,6 @@
 git clone https://github.com/seu-usuario/playlocal
 cd playlocal
 
-# Linux/Mac
-touch videos.json links.json
-
-# Windows PowerShell
-echo "[]" > videos.json
-echo '{"urls":[]}' > links.json
-
 docker-compose up --build
 ```
 
