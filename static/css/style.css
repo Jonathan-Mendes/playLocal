@@ -456,7 +456,6 @@ header {
     display: flex;
     flex-direction: column;
     padding: 16px;
-    overflow-y: auto;
 }
 .video-box {
     width: 100%;

@@ -10,6 +10,12 @@ VIDEOS_JSON  = "videos.json"
 STATUS_JSON  = "queue_status.json"
 LIMITE_BYTES = 5 * 1024 ** 3  # 5 GB
 
+# ── QUALIDADE DO DOWNLOAD ──────────────────────────────────
+# QUALIDADE = "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"      # Melhor qualidade
+# QUALIDADE = "bestvideo[height<=1080][ext=mp4]+bestaudio/best[height<=1080]" # Full HD
+QUALIDADE = "bestvideo[height<=720][ext=mp4]+bestaudio/best[height<=720]"     # HD 720p (recomendado)
+# QUALIDADE = "bestvideo[height<=480][ext=mp4]+bestaudio/best[height<=480]"   # 480p
+
 # ── helpers ───────────────────────────────────────────────
 def uso_disco():
     total = 0
@@ -37,7 +43,6 @@ def ler_fila():
             return []
 
 def remover_da_fila(url):
-    """Remove apenas uma URL da fila — preserva qualquer item adicionado durante o download."""
     urls = ler_fila()
     if url in urls:
         urls.remove(url)
@@ -68,13 +73,13 @@ def atualizar_banco(novo):
 # ── progress hook ─────────────────────────────────────────
 def make_progress_hook(titulo, thumb):
     def hook(d):
-        fila_atual = len(ler_fila())  # lê em tempo real
+        fila_atual = len(ler_fila())
         if d["status"] == "downloading":
-            total    = d.get("total_bytes") or d.get("total_bytes_estimate") or 0
-            baixado  = d.get("downloaded_bytes", 0)
+            total      = d.get("total_bytes") or d.get("total_bytes_estimate") or 0
+            baixado    = d.get("downloaded_bytes", 0)
             velocidade = d.get("_speed_str", "").strip() or "–"
-            eta      = d.get("_eta_str", "").strip() or "–"
-            pct      = round((baixado / total) * 100, 1) if total else 0
+            eta        = d.get("_eta_str", "").strip() or "–"
+            pct        = round((baixado / total) * 100, 1) if total else 0
             salvar_status({
                 "ativo":      True,
                 "titulo":     titulo,
@@ -103,7 +108,7 @@ def monitorar():
     baixados = set()
 
     print("[WATCHER] Monitorando... (Ctrl+C para sair)")
-    print("[WATCHER] Limite: 5 GB")
+    print(f"[WATCHER] Limite: 5 GB | Qualidade: {QUALIDADE}")
 
     try:
         while True:
@@ -113,8 +118,7 @@ def monitorar():
                 time.sleep(30)
                 continue
 
-            # Lê a fila AGORA — pega tudo que foi adicionado até esse momento
-            urls = ler_fila()
+            urls      = ler_fila()
             pendentes = [u for u in urls if u not in baixados]
 
             if not pendentes:
@@ -122,11 +126,9 @@ def monitorar():
                 time.sleep(3)
                 continue
 
-            # Pega o primeiro da fila e baixa
             url = pendentes[0]
 
             try:
-                # Info do vídeo
                 info_opts = {"quiet": True, "no_warnings": True, "skip_download": True}
                 with yt_dlp.YoutubeDL(info_opts) as ydl:
                     info = ydl.extract_info(url, download=False)
@@ -138,7 +140,7 @@ def monitorar():
                 dl_opts = {
                     "quiet":               True,
                     "no_warnings":         True,
-                    "format":              "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                    "format":              QUALIDADE,
                     "outtmpl":             os.path.join(PASTA_VIDEOS, "%(title)s.%(ext)s"),
                     "merge_output_format": "mp4",
                     "progress_hooks":      [make_progress_hook(titulo, thumb)],
@@ -156,9 +158,8 @@ def monitorar():
 
             except Exception as e:
                 print(f"[ERRO] {url}: {e}")
-                baixados.add(url)  # marca como processado pra não travar na mesma url com erro
+                baixados.add(url)
 
-            # Remove da fila SÓ após terminar — preserva novos itens adicionados durante o download
             remover_da_fila(url)
 
     except KeyboardInterrupt:

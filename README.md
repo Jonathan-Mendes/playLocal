@@ -16,9 +16,7 @@
 
 ```bash
 git clone https://github.com/seu-usuario/playlocal
-
 cd playlocal
-
 docker-compose up --build
 ```
 
@@ -32,6 +30,22 @@ Acesse: **http://localhost:8080**
 2. Escolha os vídeos e clique em **Baixar** — entram na fila automaticamente
 3. O Watcher (rodando em background no container) baixa um por um
 4. Clique em **Atualizar** e os vídeos aparecem prontos pra assistir
+
+---
+
+## Qualidade dos downloads
+
+O padrão é **720p**, mas você pode alterar no topo do `watcher.py`:
+
+```python
+# Descomente a linha que quiser:
+# QUALIDADE = "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"      # Melhor qualidade
+# QUALIDADE = "bestvideo[height<=1080][ext=mp4]+bestaudio/best[height<=1080]" # Full HD
+QUALIDADE = "bestvideo[height<=720][ext=mp4]+bestaudio/best[height<=720]"     # HD 720p (padrão)
+# QUALIDADE = "bestvideo[height<=480][ext=mp4]+bestaudio/best[height<=480]"   # 480p
+```
+
+Após alterar, rode `docker-compose up --build` para aplicar.
 
 ---
 
@@ -50,7 +64,6 @@ Acesse: **http://localhost:8080**
 playlocal/
 ├── docker-compose.yml   # Orquestra tudo
 ├── Dockerfile           # Imagem Python com Flask + yt-dlp + ffmpeg
-├── start.sh             # Sobe Flask + Watcher juntos
 ├── server.py            # API Flask (busca, fila, delete, storage)
 ├── watcher.py           # Baixa vídeos da fila em background
 ├── playlocal.html       # Front-end
@@ -60,6 +73,7 @@ playlocal/
 │   └── img/favicon.svg  # Ícone
 ├── videos.json          # Banco de vídeos baixados
 ├── links.json           # Fila de downloads
+├── queue_status.json    # Status do download em tempo real
 └── videos/              # Arquivos .mp4
 ```
 
